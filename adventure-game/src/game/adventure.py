@@ -47,6 +47,13 @@ class Adventure:
                 print(f"Inspecting {item}: {item_descriptions.get(item, 'No description available.')}")
             else:
                 print("You don't have that item.")
-
+        elif action.lower() in ["north", "south", "east", "west"]:
+            locs = self.map_data["locations"]
+            current = self.current_location
+            if action.lower() in locs[current]:
+                self.current_location = locs[current][action.lower()]
+                print(locs[self.current_location]["desc"])
+            else:
+                print("You can't go that way.")
         else:
             print("I don't understand that action.")
