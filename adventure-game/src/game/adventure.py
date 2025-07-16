@@ -10,12 +10,20 @@ class Adventure:
         self.current_scenario = None
         self.current_location = None
         self.map_data = None
+        self.stats = {}
 
     def start_game(self):
         print("Welcome to the Adventure Game!")
         self.state = "playing"
-        story = random.choice(possible_scenarios)
-        print("Story:", scenario_descriptions.get(story, "No description available."))
+        self.current_scenario = random.choice(possible_scenarios)
+        print("Story:", scenario_descriptions.get(self.current_scenario, "No description available."))
+        self.map_data = maps[self.current_scenario]  # Load the map for the scenario
+        self.current_location = self.map_data["start"]
+        self.stats["health"] = random.randint(50, 100)  # Random health between 50 and 100
+        self.stats["strength"] = random.randint(5, 20)
+        self.stats["intelligence"] = random.randint(5, 20)
+        self.stats["agility"] = random.randint(5, 20)
+        print(f"Your stats: {self.stats}")
         self.main_loop()
 
     def main_loop(self):
@@ -25,7 +33,17 @@ class Adventure:
 
     def handle_action(self, action):
         if action.lower() == "look":
-            print("You look around and see a beautiful landscape.")
+            locs = self.map_data["locations"]
+            current = self.current_location
+            print(locs[current]["desc"])
+            if "north" in locs[current]:
+                print("You can go north to:", locs[current]["north"])
+            if "south" in locs[current]:
+                print("You can go south to:", locs[current]["south"])
+            if "east" in locs[current]:
+                print("You can go east to:", locs[current]["east"])
+            if "west" in locs[current]:
+                print("You can go west to:", locs[current]["west"])
         elif action.lower() == "take":
             item = input("What do you want to take? ")
             self.inventory.append(item)
@@ -55,5 +73,7 @@ class Adventure:
                 print(locs[self.current_location]["desc"])
             else:
                 print("You can't go that way.")
+        elif action.lower() == "stats":
+            print("Your stats:", self.stats)
         else:
             print("I don't understand that action.")
