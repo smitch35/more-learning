@@ -54,7 +54,7 @@ class Adventure:
             print("Thanks for playing!")
             self.state = "quit"
         elif action.lower() == "help":
-            print("Available actions: look, take, inventory, quit, help")
+            print("Available actions: look (move with cardinal directions), take, inventory, quit, help")
         elif action.lower() == "find":
             item = random.choice(possible_items)
             self.inventory.append(item)
