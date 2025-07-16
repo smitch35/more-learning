@@ -10,21 +10,24 @@ maps = {
             "empty_cell": {"desc": "Another cell, its captor long dead.", "south": "hallway_3"},
             "hallway_3": {"desc": "You continue down another dark dank path.", "south": "store_room"},
             "store_room": {"desc": "It appears you've found a storeroom that seems to have some items that could help.", "east": "dead_end", "south": "exit"},
-            "exit": {"desc": "You're free from the dungeon, but what lies ahead..."}
+            "exit": {"desc": "You're free from the dungeon, but what lies ahead...", "south": {"map": "forest", "location": "clearing"}}
 
         }
     },
     "forest": {
         "start": "clearing",
         "locations": {
-            "clearing": {"desc": "A forest clearing.", "north": "deep_forest", "west": {"map" :"castle", "location": "gate"},
-            "deep_forest": {"desc": "Dense trees surround you.", "south": "clearing"}
+            "clearing": {"desc": "A forest clearing.", "north": "deep_forest"}, 
+            "deep_forest": {"desc": "Dense trees surround you.", "south": "clearing", "west": {"map" :"castle", "location": "gate"}}
         }
     },
     "castle": {
         "start": "gate",
         "locations": {
-            "gate": {"desc": "A grand castle gate.", "east": "forest"}
+            "gate": {"desc": "A grand castle gate.  It appears very run down.  A dead kingdom, for a dead king.", "east": "tower1", "west": "tower2"},
+            "tower1": {"desc": "A rundown watch tower with a gaping hole at the bottom it looks like you could go in.", "east": "tower1_hole", "west": "gate" },
+            "tower2": {"desc": "A fully collapsed tower.  There doesn't appear to be much here", "east": "gate"},
+            "tower1_hole": {"desc": "It's dark inside but you think you might be able to see something if you check around.", "west": "tower1"}
         }
     },
 
@@ -41,5 +44,4 @@ maps = {
             "treasure_room": {"desc": "A room glittering with treasure! You found the exit.", "south": "crossroads"}
         }
     }
-}
 }

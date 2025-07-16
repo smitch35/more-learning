@@ -7,7 +7,7 @@ class Adventure:
     def __init__(self):
         self.state = "start"
         self.inventory = []
-        self.current_scenario = None
+        self.current_scenario = "dungeon"
         self.current_location = None
         self.map_data = None
         self.stats = {}
@@ -15,7 +15,6 @@ class Adventure:
     def start_game(self):
         print("Welcome to the Adventure Game!")
         self.state = "playing"
-        self.current_scenario = random.choice(possible_scenarios)
         print("Story:", scenario_descriptions.get(self.current_scenario, "No description available."))
         self.map_data = maps[self.current_scenario]  # Load the map for the scenario
         self.current_location = self.map_data["start"]
