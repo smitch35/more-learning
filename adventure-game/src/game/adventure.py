@@ -1,7 +1,9 @@
+from tokenize import maybe
 from .items import possible_items, item_descriptions 
 from .stories import possible_scenarios, scenario_descriptions
 from .maps import maps
-import random
+from .enemies import possible_enemies, enemy_stats
+import random 
 
 class Adventure:
     def __init__(self):
@@ -11,6 +13,23 @@ class Adventure:
         self.current_location = None
         self.map_data = None
         self.stats = {}
+        
+    def combat(self,enemy):
+        while self.stats["health"] > 0 and enemy.health > 0:
+            damage = random.randint(1, self.stats["strength"])
+            enemy.health -= damage
+            print(f"You hit {enemy.name} for {damage} damage.  Enemy health: {enemy.health}")
+
+            if enemy.health <= 0:
+                print(f"You defeated the {enemy.name}!")
+                return
+            damage = random.randint(1, enemy.attack)
+            self.stats["health"] -= damage
+            print(f"The {enemy.name} hits you for {damage} damage.  Your health: {self.stats['health']}")
+
+            if self.stats["health"] <= 0:
+                print("You died.")
+                self.state = "quit"
 
     def start_game(self):
         print("Welcome to the Adventure Game!")
@@ -70,9 +89,20 @@ class Adventure:
             if action.lower() in locs[current]:
                 self.current_location = locs[current][action.lower()]
                 print(locs[self.current_location]["desc"])
+                if random.random() < 0.5:
+                    enemy_name = random.choice(possible_enemies)
+                    enemy = Enemy(enemy_name, enemy_stats[enemy_name]["health"], enemy_stats[enemy_name]["attack"])
+                    print(f"A wild {enemy.name} appears! Health: {enemy.health}, Attack: {enemy.attack}")
+                    self.combat(enemy)
             else:
                 print("You can't go that way.")
         elif action.lower() == "stats":
             print("Your stats:", self.stats)
         else:
             print("I don't understand that action.")
+
+class Enemy:
+    def __init__(self, name, health, attack):
+        self.name = name
+        self.health = health
+        self.attack = attack
