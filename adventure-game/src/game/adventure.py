@@ -2,6 +2,7 @@ from .items import possible_items, item_descriptions
 from .stories import possible_scenarios, scenario_descriptions
 from .maps import maps
 from .enemies import possible_enemies, enemy_stats, LEVEL_BOOSTS
+from colorama import init, Fore, Style
 import random 
 
 class Adventure:
@@ -38,7 +39,7 @@ class Adventure:
     def start_game(self):
         print("Welcome to the Adventure Game!")
         self.state = "playing"
-        print("Story:", scenario_descriptions.get(self.current_scenario, "No description available."))
+        print(Fore.CYAN + "Story:" + Style.RESET_ALL + " " + Fore.GREEN + scenario_descriptions.get(self.current_scenario, "No description available.") + Style.RESET_ALL)
         self.map_data = maps[self.current_scenario]  # Load the map for the scenario
         self.current_location = self.map_data["start"]
         self.stats["health"] = random.randint(50, 100)  # Random health between 50 and 100
@@ -93,7 +94,7 @@ class Adventure:
             current = self.current_location
             if action.lower() in locs[current]:
                 self.current_location = locs[current][action.lower()]
-                print(locs[self.current_location]["desc"])
+                print(Fore.GREEN + locs[self.current_location]["desc"] + Style.RESET_ALL)
                 if random.random() < 0.5:
                     enemy_name = random.choice(possible_enemies)
                     enemy = Enemy(enemy_name, enemy_stats[enemy_name]["health"], enemy_stats[enemy_name]["attack"], enemy_stats[enemy_name]["xp"])
