@@ -59,7 +59,7 @@ class Adventure:
         if action.lower() == "look":
             locs = self.map_data["locations"]
             current = self.current_location
-            print(locs[current]["desc"])
+            print(Fore.GREEN + locs[current]["desc"] + Style.RESET_ALL)
             if "north" in locs[current]:
                 print("You can go north to:", locs[current]["north"])
             if "south" in locs[current]:
