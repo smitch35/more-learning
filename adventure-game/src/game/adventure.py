@@ -1,8 +1,7 @@
-from tokenize import maybe
 from .items import possible_items, item_descriptions 
 from .stories import possible_scenarios, scenario_descriptions
 from .maps import maps
-from .enemies import possible_enemies, enemy_stats
+from .enemies import possible_enemies, enemy_stats, LEVEL_BOOSTS
 import random 
 
 class Adventure:
@@ -13,6 +12,8 @@ class Adventure:
         self.current_location = None
         self.map_data = None
         self.stats = {}
+        self.stats["xp"] = 0
+        self.LEVEL_THRESHOLDS = [0, 20, 50, 100, 200]  # XP needed for each level
         
     def combat(self,enemy):
         while self.stats["health"] > 0 and enemy.health > 0:
@@ -21,7 +22,10 @@ class Adventure:
             print(f"You hit {enemy.name} for {damage} damage.  Enemy health: {enemy.health}")
 
             if enemy.health <= 0:
-                print(f"You defeated the {enemy.name}!")
+                print(f"You defeated the {enemy.name} and gained {enemy.xp}xp!")
+                self.stats["xp"] += enemy.xp
+                self.check_level_up()
+                
                 return
             damage = random.randint(1, enemy.attack)
             self.stats["health"] -= damage
@@ -41,6 +45,7 @@ class Adventure:
         self.stats["strength"] = random.randint(5, 20)
         self.stats["intelligence"] = random.randint(5, 20)
         self.stats["agility"] = random.randint(5, 20)
+        self.stats["level"] = 1
         print(f"Your stats: {self.stats}")
         self.main_loop()
 
@@ -91,7 +96,7 @@ class Adventure:
                 print(locs[self.current_location]["desc"])
                 if random.random() < 0.5:
                     enemy_name = random.choice(possible_enemies)
-                    enemy = Enemy(enemy_name, enemy_stats[enemy_name]["health"], enemy_stats[enemy_name]["attack"])
+                    enemy = Enemy(enemy_name, enemy_stats[enemy_name]["health"], enemy_stats[enemy_name]["attack"], enemy_stats[enemy_name]["xp"])
                     print(f"A wild {enemy.name} appears! Health: {enemy.health}, Attack: {enemy.attack}")
                     self.combat(enemy)
             else:
@@ -101,8 +106,19 @@ class Adventure:
         else:
             print("I don't understand that action.")
 
+    def check_level_up(self):
+        current_level = self.stats["level"]
+        for i, threshold in enumerate(self.LEVEL_THRESHOLDS):
+            if self.stats["xp"] >= threshold and i + 1 > current_level:
+                self.stats["level"] = i + 1
+                boosts = LEVEL_BOOSTS[i +1] if i + 1 < len(LEVEL_BOOSTS) else {}
+                for stat, amount in boosts.items():
+                    self.stats[stat] += amount
+                print(f"You leveled up! Now level {self.stats['level']}. Stats increated: {boosts}")
+
 class Enemy:
-    def __init__(self, name, health, attack):
+    def __init__(self, name, health, attack, xp):
         self.name = name
         self.health = health
         self.attack = attack
+        self.xp = xp
