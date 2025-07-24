@@ -6,7 +6,7 @@ maps = {
             "hallway": {"desc": "An empty hallway.  It's quiet and the only sound you hear is the scurry of an aniamal and the drip of moisture.", "south": "cell", "west": "corridor"},
             "corridor": {"desc": "A damp corridor.  You wonder how far this dungeon goes and why you are there in the first place.  If only you could find your way", "east": "hallway", "north": "door", "west": "hallway_2"},
             "door": {"desc": "A locked door.", "south": "corridor"},
-            "hallway_2": {"desc": "Another empty hallway, you wonder how big this place is.", "east": "empty_cell"},
+            "hallway_2": {"desc": "Another empty hallway, you wonder how big this place is.", "south": "empty_cell"},
             "empty_cell": {"desc": "Another cell, its captor long dead.", "south": "hallway_3"},
             "hallway_3": {"desc": "You continue down another dark dank path.", "south": "store_room"},
             "store_room": {"desc": "It appears you've found a storeroom that seems to have some items that could help.", "east": "dead_end", "south": "exit"},
@@ -45,3 +45,13 @@ maps = {
         }
     }
 }
+
+map_dungeon = [
+    ["# ", "# ", "# ", "# ", "# "],
+    ["# ", ". ", "# ", "# ", "# "],
+    [". ", ". ", ". ", "# ", "# "],
+    [". ", "# ", ". ", "# ", "# "],
+    [". ", "# ", "# ", "# ", "# "],
+    [". ", ". ", "# ", "# ", "# "],
+    [". ", "# ", "# ", "# ", "# "]
+]

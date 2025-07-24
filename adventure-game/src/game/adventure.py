@@ -1,6 +1,6 @@
 from .items import possible_items, item_descriptions 
 from .stories import possible_scenarios, scenario_descriptions
-from .maps import maps
+from .maps import maps, map_dungeon 
 from .enemies import possible_enemies, enemy_stats, LEVEL_BOOSTS
 from colorama import init, Fore, Style
 import random 
@@ -8,13 +8,15 @@ import random
 class Adventure:
     def __init__(self):
         self.state = "start"
-        self.inventory = []
+        self.inventory = [map]
         self.current_scenario = "dungeon"
         self.current_location = None
         self.map_data = None
         self.stats = {}
         self.stats["xp"] = 0
         self.LEVEL_THRESHOLDS = [0, 20, 50, 100, 200]  # XP needed for each level
+        self.player_x = 2
+        self.player_y = 3
         
     def combat(self,enemy):
         while self.stats["health"] > 0 and enemy.health > 0:
@@ -62,8 +64,10 @@ class Adventure:
             print(Fore.GREEN + locs[current]["desc"] + Style.RESET_ALL)
             if "north" in locs[current]:
                 print("You can go north to:", locs[current]["north"])
+                
             if "south" in locs[current]:
                 print("You can go south to:", locs[current]["south"])
+                
             if "east" in locs[current]:
                 print("You can go east to:", locs[current]["east"])
             if "west" in locs[current]:
@@ -95,6 +99,14 @@ class Adventure:
             if action.lower() in locs[current]:
                 self.current_location = locs[current][action.lower()]
                 print(Fore.GREEN + locs[self.current_location]["desc"] + Style.RESET_ALL)
+                if action.lower() == "north":
+                    self.player_y -= 1
+                elif action.lower() == "south":
+                    self.player_y += 1
+                elif action.lower() == "east":
+                    self.player_x += 1
+                elif action.lower() == "west":
+                    self.player_x -= 1
                 if random.random() < 0.5:
                     enemy_name = random.choice(possible_enemies)
                     enemy = Enemy(enemy_name, enemy_stats[enemy_name]["health"], enemy_stats[enemy_name]["attack"], enemy_stats[enemy_name]["xp"])
@@ -104,6 +116,11 @@ class Adventure:
                 print("You can't go that way.")
         elif action.lower() == "stats":
             print("Your stats:", self.stats)
+        
+        elif action.lower() == "map":
+            # Make sure you have player_x and player_y defined and updated as the player moves
+            self.display_map(map_dungeon, self.player_x, self.player_y)
+
         else:
             print("I don't understand that action.")
 
@@ -116,6 +133,18 @@ class Adventure:
                 for stat, amount in boosts.items():
                     self.stats[stat] += amount
                 print(f"You leveled up! Now level {self.stats['level']}. Stats increated: {boosts}")
+    
+    def display_map(self, map_grid, player_x, player_y):
+        for y, row in enumerate(map_grid):
+            line = ""
+            for x, cell in enumerate(row):
+                if x == player_x and y == player_y:
+                    line += "@ "
+                elif cell == "# ":
+                    line += Fore.RED + "# " + Style.RESET_ALL 
+                else:
+                    line += cell
+            print(line)
 
 class Enemy:
     def __init__(self, name, health, attack, xp):
