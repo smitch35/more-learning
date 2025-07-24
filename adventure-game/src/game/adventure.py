@@ -8,7 +8,7 @@ import random
 class Adventure:
     def __init__(self):
         self.state = "start"
-        self.inventory = [map]
+        self.inventory = ["map"]
         self.current_scenario = "dungeon"
         self.current_location = None
         self.map_data = None
