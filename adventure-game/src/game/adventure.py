@@ -27,8 +27,12 @@ class Adventure:
             if enemy.health <= 0:
                 print(f"You defeated the {enemy.name} and gained {enemy.xp}xp!")
                 self.stats["xp"] += enemy.xp
+                self.stats["gold"] += enemy_stats[enemy.name]["gold"]
                 self.check_level_up()
-                
+                for item in enemy_stats[enemy.name].get("items", []):
+                    if random.random() < 0.5:  # 50% chance to drop each item
+                        self.inventory.append(item)
+                        print(f"You found a {item} on the {enemy.name}!")
                 return
             damage = random.randint(1, enemy.attack)
             self.stats["health"] -= damage
@@ -49,6 +53,7 @@ class Adventure:
         self.stats["intelligence"] = random.randint(5, 20)
         self.stats["agility"] = random.randint(5, 20)
         self.stats["level"] = 1
+        self.stats["gold"] = 0
         print(f"Your stats: {self.stats}")
         self.main_loop()
 
