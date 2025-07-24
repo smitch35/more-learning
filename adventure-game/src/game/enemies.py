@@ -1,11 +1,11 @@
 possible_enemies = [ "skeleton", "rat", "spider", "goblin", "orc" ]
 
 enemy_stats = {
-    "skeleton": {"health": 30, "attack": 5, "xp": 10},
-    "rat": {"health": 10, "attack": 2, "xp": 10},
-    "spider": {"health": 15, "attack": 3, "xp": 10},
+    "skeleton": {"health": 30, "attack": 5, "xp": 10, "gold": 2},
+    "rat": {"health": 10, "attack": 2, "xp": 10, "gold": 2},
+    "spider": {"health": 15, "attack": 3, "xp": 10, "gold": 2},
     "goblin": {"health": 25, "attack": 4, "xp": 10, "items": ["potion"], "gold": 2},
-    "orc": {"health": 40, "attack": 6, "xp": 10},
+    "orc": {"health": 40, "attack": 6, "xp": 10, "gold": 2},
 }
 
 
