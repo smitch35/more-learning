@@ -4,9 +4,19 @@ from .maps import maps, map_dungeon
 from .enemies import possible_enemies, enemy_stats, LEVEL_BOOSTS
 from colorama import init, Fore, Style
 import random 
+import pygame
+import os
+import sys
 
 class Adventure:
     def __init__(self):
+        pygame.mixer.init()
+        if hasattr(sys, '_MEIPASS'):
+            base_path = sys._MEIPASS
+        else:
+            base_path = os.path.abspath(os.path.dirname(__file__))
+        pygame.mixer.music.load(os.path.join("src", "game", "music", "title_screen.mp3"))
+        pygame.mixer.music.play(-1)
         self.state = "start"
         self.inventory = ["map"]
         self.current_scenario = "dungeon"
@@ -17,6 +27,10 @@ class Adventure:
         self.LEVEL_THRESHOLDS = [0, 20, 50, 100, 200]  # XP needed for each level
         self.player_x = 2
         self.player_y = 3
+        pygame.mixer.init()
+        pygame.mixer.music.load(os.path.join("src", "game", "music", "title_screen.mp3"))
+        pygame.mixer.music.play(-1)
+
         
     def combat(self,enemy):
         while self.stats["health"] > 0 and enemy.health > 0:
@@ -43,6 +57,9 @@ class Adventure:
                 self.state = "quit"
 
     def start_game(self):
+        pygame.mixer.music.stop()
+        pygame.mixer.music.load(os.path.join("src", "game", "music", "overworld.mp3"))
+        pygame.mixer.music.play(-1)
         print("Welcome to the Adventure Game!")
         self.state = "playing"
         print(Fore.CYAN + "Story:" + Style.RESET_ALL + " " + Fore.GREEN + scenario_descriptions.get(self.current_scenario, "No description available.") + Style.RESET_ALL)
@@ -56,6 +73,7 @@ class Adventure:
         self.stats["gold"] = 0
         print(f"Your stats: {self.stats}")
         self.main_loop()
+        
 
     def main_loop(self):
         while self.state == "playing":
