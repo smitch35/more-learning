@@ -30,6 +30,7 @@ def title_screen():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+                pygame.quit()
                 return "quit"
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
@@ -37,13 +38,16 @@ def title_screen():
                 elif event.key == pygame.K_DOWN:
                     selected = (selected + 1) % len(menu_items)
                 elif event.key == pygame.K_RETURN:
+                    pygame.quit()
                     return menu_items[selected].lower().replace(" ", "_")
+                    
 
     pygame.quit()
 
 # Example usage:
 choice = title_screen()
 if choice == "start_game":
+    
     from game.adventure import Adventure
     game = Adventure()
     game.start_game()
@@ -56,24 +60,3 @@ elif choice == "credits":
     sys.exit()
 elif choice == "quit":
     sys.exit()
-
-    
-
-
-
-#def main():
-#    print("Welcome to the Adventure Game!")
-#    print("Type 'start' to begin your adventure or 'quit' to exit.")#
-#
-#    while True:
-#        command = input("> ").strip().lower()
-#        if command == "start":
-#            
-#        elif command == "quit":
-#            print("Thanks for playing!")
-#            break
-#        else:
-#            print("Invalid command. Please type 'start' or 'quit'.")
-#
-#if __name__ == "__main__":
-#    main()
