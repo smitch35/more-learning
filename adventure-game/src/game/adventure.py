@@ -79,10 +79,15 @@ class Adventure:
                 self.check_level_up()
                 for item in enemy_stats[enemy.name].get("items", []):
                     if random.random() < 0.5:  # 50% chance to drop each item
-                        pygame.mixer.music.load(os.path.join("game", "music", "overworld.mp3"))
+                        pygame.mixer.music.load(os.path.join("game", "music", "surprise.mp3"))
                         pygame.mixer.music.play(0)
                         self.inventory.append(item)       
                         print(f"You found a {item} on the {enemy.name}!")
+                        while pygame.mixer.music.get_busy():
+                            pygame.time.wait(100)
+                        # Switch back to overworld music
+                        pygame.mixer.music.load(os.path.join("game", "music", "overworld.mp3"))
+                        pygame.mixer.music.play(-1)
                 return
             
 
