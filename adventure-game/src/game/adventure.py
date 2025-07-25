@@ -8,15 +8,14 @@ import pygame
 import os
 import sys
 
-class Adventure:
+
+class Adventure:    
     def __init__(self):
         pygame.mixer.init()
         if hasattr(sys, '_MEIPASS'):
             base_path = sys._MEIPASS
         else:
             base_path = os.path.abspath(os.path.dirname(__file__))
-        pygame.mixer.music.load(os.path.join("src", "game", "music", "title_screen.mp3"))
-        pygame.mixer.music.play(-1)
         self.state = "start"
         self.inventory = ["map"]
         self.current_scenario = "dungeon"
@@ -28,7 +27,7 @@ class Adventure:
         self.player_x = 2
         self.player_y = 3
         pygame.mixer.init()
-        pygame.mixer.music.load(os.path.join("src", "game", "music", "title_screen.mp3"))
+        pygame.mixer.music.load(os.path.join("game", "music", "overworld.mp3"))
         pygame.mixer.music.play(-1)
 
         
@@ -57,10 +56,6 @@ class Adventure:
                 self.state = "quit"
 
     def start_game(self):
-        pygame.mixer.music.stop()
-        pygame.mixer.music.load(os.path.join("src", "game", "music", "overworld.mp3"))
-        pygame.mixer.music.play(-1)
-        print("Welcome to the Adventure Game!")
         self.state = "playing"
         print(Fore.CYAN + "Story:" + Style.RESET_ALL + " " + Fore.GREEN + scenario_descriptions.get(self.current_scenario, "No description available.") + Style.RESET_ALL)
         self.map_data = maps[self.current_scenario]  # Load the map for the scenario
