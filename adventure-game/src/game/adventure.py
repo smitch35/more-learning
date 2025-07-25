@@ -26,18 +26,53 @@ class Adventure:
         self.LEVEL_THRESHOLDS = [0, 20, 50, 100, 200]  # XP needed for each level
         self.player_x = 2
         self.player_y = 3
-        pygame.mixer.init()
+        
         pygame.mixer.music.load(os.path.join("game", "music", "overworld.mp3"))
         pygame.mixer.music.play(-1)
 
         
     def combat(self,enemy):
+        if hasattr(sys, '_MEIPASS'):
+            base_path = sys._MEIPASS
+        else:
+            base_path = os.path.abspath(os.path.dirname(__file__))
+        pygame.mixer.music.load(os.path.join("game", "music", "battle_music.mp3"))
+        pygame.mixer.music.play(-1)
+        
         while self.stats["health"] > 0 and enemy.health > 0:
-            damage = random.randint(1, self.stats["strength"])
-            enemy.health -= damage
-            print(f"You hit {enemy.name} for {damage} damage.  Enemy health: {enemy.health}")
+            print("\nChoose your action:")
+            print("1. Attack")
+            print("2. Use Item")
+            print("3. Run")
+            choice = input("Enter the number of your action: ").strip()
 
+            if choice == "1":
+                damage = random.randint(1, self.stats["strength"])
+                enemy.health -= damage
+                print(f"You hit {enemy.name} for {damage} damage.  Enemy health: {enemy.health}")
+                damage = random.randint(1, enemy.attack)
+                self.stats["health"] -= damage
+                print(f"The {enemy.name} hits you for {damage} damage.  Your health: {self.stats['health']}")
+            elif choice == "2":
+                pass # TODO: Implement use item
+            elif choice == "3":
+                if random.random() < 0.7:
+                    print("You run from combat")
+                    pygame.mixer.music.load(os.path.join("game", "music", "overworld.mp3"))
+                    pygame.mixer.music.play(-1)
+                    return
+                else:
+                    damage = random.randint(1, enemy.attack)
+                    self.stats["health"] -= damage
+                    print(f"The {enemy.name} hits you for {damage} damage.  Your health: {self.stats['health']}")
+            else:
+                print("Invalid choice. Try again.")
+                continue  # Repeats the turn
+            
+            
             if enemy.health <= 0:
+                pygame.mixer.music.load(os.path.join("game", "music", "overworld.mp3"))
+                pygame.mixer.music.play(-1)
                 print(f"You defeated the {enemy.name} and gained {enemy.xp}xp!")
                 self.stats["xp"] += enemy.xp
                 self.stats["gold"] += enemy_stats[enemy.name]["gold"]
@@ -47,9 +82,7 @@ class Adventure:
                         self.inventory.append(item)
                         print(f"You found a {item} on the {enemy.name}!")
                 return
-            damage = random.randint(1, enemy.attack)
-            self.stats["health"] -= damage
-            print(f"The {enemy.name} hits you for {damage} damage.  Your health: {self.stats['health']}")
+            
 
             if self.stats["health"] <= 0:
                 print("You died.")

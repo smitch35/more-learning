@@ -44,10 +44,9 @@ def title_screen():
 
     pygame.quit()
 
-# Example usage:
+
 choice = title_screen()
 if choice == "start_game":
-    
     from game.adventure import Adventure
     game = Adventure()
     game.start_game()
