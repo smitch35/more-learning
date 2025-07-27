@@ -1,4 +1,4 @@
-from .items import possible_items, item_descriptions 
+from .items import possible_items, item_descriptions, item_effects
 from .stories import possible_scenarios, scenario_descriptions
 from .maps import maps, map_dungeon 
 from .enemies import possible_enemies, enemy_stats, LEVEL_BOOSTS
@@ -18,6 +18,7 @@ class Adventure:
             base_path = os.path.abspath(os.path.dirname(__file__))
         self.state = "start"
         self.inventory = ["map"]
+        self.inventory_consumeable = ["potion"]
         self.current_scenario = "dungeon"
         self.current_location = None
         self.map_data = None
@@ -54,7 +55,21 @@ class Adventure:
                 self.stats["health"] -= damage
                 print(f"The {enemy.name} hits you for {damage} damage.  Your health: {self.stats['health']}")
             elif choice == "2":
-                pass # TODO: Implement use item
+                print("Select an item:")
+                for idx, item in enumerate(self.inventory_consumeable,1):
+                    print(f"{idx}. {item}")
+                choice = input("Enter the number of your choice: ").strip()
+                if choice.isdigit():
+                    choice = int(choice)
+                    if 1 <= choice <= len(self.inventory_consumeable):
+                        selected_item = self.inventory_consumeable.pop(choice - 1)
+                        effect = item_effects.get(selected_item, {})
+                        for stat, value in effect.items():
+                            self.stats[stat] += value
+                    print(f"You used {selected_item} and gained: {effect}")
+                    continue    
+                print("Invalid selection.")
+                continue
             elif choice == "3":
                 if random.random() < 0.7:
                     print("You run from combat")
@@ -136,6 +151,8 @@ class Adventure:
             print(f"You have taken {item}.")
         elif action.lower() == "inventory":
             print("Your inventory:", self.inventory)
+        elif action.lower() == "consumables":
+            print("You can consume:", self.inventory_consumeable)
         elif action.lower() == "quit":
             print("Thanks for playing!")
             self.state = "quit"
@@ -205,8 +222,10 @@ class Adventure:
             print(line)
 
 class Enemy:
-    def __init__(self, name, health, attack, xp):
+    def __init__(self, name, health, attack, xp, gold=0, items=None):
         self.name = name
         self.health = health
         self.attack = attack
         self.xp = xp
+        self.gold = gold
+        self.items = items if items else []

@@ -10,3 +10,7 @@ item_descriptions = {
     "letter": {"desc":"A letter written by a lost loved one."},
     "torch": {"desc": "Its a torch for seeing better in the dark."}
 }
+
+item_effects = {
+    "potion": {"health": 10}
+}
