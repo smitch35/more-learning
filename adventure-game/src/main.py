@@ -16,7 +16,7 @@ def title_screen():
     pygame.mixer.music.play(-1)
 
     while running:
-        screen.fill((0, 0, 0))
+        screen.fill((0, 10, 1))
         title_text = font.render("Welcome to the Adventure Game!", True, (0, 255, 0))
         screen.blit(title_text, (50, 50))
 
