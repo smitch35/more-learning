@@ -152,12 +152,24 @@ class Adventure:
         elif action.lower() == "inventory":
             print("Your inventory:", self.inventory)
         elif action.lower() == "consumables":
-            print("You can consume:", self.inventory_consumeable)
+            print("Select an item:")
+            for idx, item in enumerate(self.inventory_consumeable,1):
+                    print(f"{idx}. {item}")
+            choice = input("Enter the number of your choice: ").strip()
+            if choice.isdigit():
+                    choice = int(choice)
+                    if 1 <= choice <= len(self.inventory_consumeable):
+                        selected_item = self.inventory_consumeable.pop(choice - 1)
+                        effect = item_effects.get(selected_item, {})
+                        for stat, value in effect.items():
+                            self.stats[stat] += value
+                    print(f"You used {selected_item} and gained: {effect}")
+            
         elif action.lower() == "quit":
             print("Thanks for playing!")
             self.state = "quit"
         elif action.lower() == "help":
-            print("Available actions: look (move with cardinal directions), take, inventory, quit, help")
+            print("Available actions: look (move with cardinal directions), take, inventory, consumables, quit, help")
         elif action.lower() == "find":
             item = random.choice(possible_items)
             self.inventory.append(item)
