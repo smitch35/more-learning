@@ -8,6 +8,14 @@ import pygame
 import os
 import sys
 
+pygame.init()
+screen = pygame.display.set_mode((800, 600))
+font = pygame.font.SysFont(None, 32)
+pygame.display.flip()
+#screen.fill((0, 0, 0))
+#text_surface = font.render(f"Your stats: ...", True, (255, 255, 255))
+#screen.blit(text_surface, (20, 20))
+#pygame.display.flip()
 
 class Adventure:    
     def __init__(self):
@@ -31,7 +39,8 @@ class Adventure:
         pygame.mixer.music.load(os.path.join("game", "music", "overworld.mp3"))
         pygame.mixer.music.play(-1)
 
-        
+
+
     def combat(self,enemy):
         if hasattr(sys, '_MEIPASS'):
             base_path = sys._MEIPASS
@@ -112,7 +121,7 @@ class Adventure:
 
     def start_game(self):
         self.state = "playing"
-        print(Fore.CYAN + "Story:" + Style.RESET_ALL + " " + Fore.GREEN + scenario_descriptions.get(self.current_scenario, "No description available.") + Style.RESET_ALL)
+        
         self.map_data = maps[self.current_scenario]  # Load the map for the scenario
         self.current_location = self.map_data["start"]
         self.stats["health"] = random.randint(50, 100)  # Random health between 50 and 100
@@ -126,9 +135,36 @@ class Adventure:
         
 
     def main_loop(self):
-        while self.state == "playing":
-            action = input("What do you want to do? ")
-            self.handle_action(action)
+        running = True
+        user_action = ""
+        while running and self.state == "playing":
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                    self.state = "quit"
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        running = False
+                        self.state = "quit"
+                    elif event.key == pygame.K_l:
+                        user_action = "look"
+                    elif event.key == pygame.K_i:
+                        user_action = "inventory"
+                    elif event.key == pygame.K_s:
+                        user_action = "stats"
+            screen.fill((0,0,0))
+            desc = scenario_descriptions.get(self.current_scenario, "No Description Available.")
+            story_text = f"Story: {desc}"
+            story_print = font.render(story_text, True, (0, 255, 0))
+            screen.blit(story_print, (20, 20))
+
+            pygame.display.flip()
+            
+            if user_action:
+                self.handle_action(user_action)
+                user_action = ""
+            #action = input("What do you want to do? ")
+            #self.handle_action(action)
 
     def handle_action(self, action):
         if action.lower() == "look":
